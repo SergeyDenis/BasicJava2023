@@ -2,42 +2,38 @@ package ru.HomeWork4Survey;
 
 public class CheckSurvey
 {
-    public SurveyLibrary surveyObject;
-    int[] arraySelectedAnswerOfThisSurvey;
-    String[][][] arrayResultOfThisSurvey;
-    int sumRightAnswer = 0 ;
-    public CheckSurvey(SurveyLibrary surveyObject){
-     this.surveyObject=surveyObject;
-     this.arraySelectedAnswerOfThisSurvey=new int[this.surveyObject.arrayQuestionsOfThisSurvey.length];
-     this.arrayResultOfThisSurvey = new String[this.surveyObject.arrayQuestionsOfThisSurvey.length][3][2] ;
+    public SurveyLib surveyObj;
+    int[] aSelectedAns;
+    int sumRightAns = 0 ;
+    public CheckSurvey(SurveyLib surveyObj){
+     this.surveyObj = surveyObj;
+     this.aSelectedAns =new int[this.surveyObj.getCountQuestionsSurvey()];
     }
-    public void checkingTheAnswer ()
+    public void checkAnswer()
     {
-        for (int questionNum = 0; questionNum < arraySelectedAnswerOfThisSurvey.length ; questionNum++) {
-            arrayResultOfThisSurvey[questionNum][SurveyLibrary.constQuestionPosition][SurveyLibrary.constQuestionName] = surveyObject.arrayQuestionsOfThisSurvey[questionNum][SurveyLibrary.constQuestionPosition][SurveyLibrary.constQuestionPosition];
-            if (arraySelectedAnswerOfThisSurvey[questionNum]<1 || arraySelectedAnswerOfThisSurvey[questionNum] > surveyObject.arrayQuestionsOfThisSurvey[questionNum][SurveyLibrary.constAnswersPosition].length )
+        SurveyLib.Question[] qstRes = surveyObj.getResSurvey();
+        String textResultAnswer;
+        for (int qst = 0; qst < aSelectedAns.length ; qst++) {
+            textResultAnswer="Ответ неправильный";
+            if (aSelectedAns[qst]<1 || aSelectedAns[qst] > surveyObj.getSurveyQuestions()[qst].getAnswers().size() )
             {
-                arrayResultOfThisSurvey[questionNum][SurveyLibrary.constAnswersPosition][SurveyLibrary.constAnswerName]="Некорректный";
-                arrayResultOfThisSurvey[questionNum][SurveyLibrary.constAnswersPosition][SurveyLibrary.constAnswerNum] = String.valueOf(arraySelectedAnswerOfThisSurvey[questionNum]);
-                arrayResultOfThisSurvey[questionNum][SurveyLibrary.constResultPosition][SurveyLibrary.constResultName] ="Допустимые вариант ответа от 1 до "+surveyObject.arrayQuestionsOfThisSurvey[questionNum][SurveyLibrary.constAnswersPosition].length;
+                String noAnswer="Допустимые вариант ответа от 1 до "+ surveyObj.getSurveyQuestions()[qst].getAnswers().size();
+                qstRes[qst].getAnswers().set(0,new SurveyLib.Answer(aSelectedAns[qst]+" Некорректный ответ",noAnswer ));
                 continue;
             }
-            arrayResultOfThisSurvey[questionNum][SurveyLibrary.constAnswersPosition][SurveyLibrary.constAnswerName]    = surveyObject.arrayQuestionsOfThisSurvey[questionNum][SurveyLibrary.constAnswersPosition][arraySelectedAnswerOfThisSurvey[questionNum]-1];
-            arrayResultOfThisSurvey[questionNum][SurveyLibrary.constAnswersPosition][SurveyLibrary.constAnswerNum]     = String.valueOf(arraySelectedAnswerOfThisSurvey[questionNum]);
-
-            if (SurveyLibrary.decodeAnswer(surveyObject.arrayQuestionsOfThisSurvey, questionNum,arraySelectedAnswerOfThisSurvey[questionNum]-1).equals(surveyObject.arrayQuestionsOfThisSurvey[questionNum][SurveyLibrary.constResultPosition][arraySelectedAnswerOfThisSurvey[questionNum]-1]))
+            String ansRes = surveyObj.getSurveyQuestions()[qst].getAnswers().get(aSelectedAns[qst]-1).getAnswerResult();
+            if (SurveyLib.decodeAnswer(surveyObj.getSurveyQuestions(), qst, aSelectedAns[qst]-1).equals(ansRes))
             {
-                arrayResultOfThisSurvey[questionNum][SurveyLibrary.constResultPosition][SurveyLibrary.constResultName]="Ответ верный";
-                sumRightAnswer++;
+                textResultAnswer="Ответ верный";
+                sumRightAns++;
             }
-            else {
-                arrayResultOfThisSurvey[questionNum][SurveyLibrary.constResultPosition][SurveyLibrary.constResultName]="Ответ неправильный";
-            }
-
+            String ans = aSelectedAns[qst]+"-"+surveyObj.getSurveyQuestions()[qst].getAnswers().get(aSelectedAns[qst]-1).getAnswer();
+            qstRes[qst].getAnswers().set(0,new SurveyLib.Answer(ans,textResultAnswer));
         }
+        surveyObj.setResultSurvey(qstRes,sumRightAns);
     }
-    public void setArraySelectedAnswer(int numQuestion, int numAnswer)
+    public void setSelectedAns(int numQuestion, int numAnswer)
     {
-        arraySelectedAnswerOfThisSurvey[numQuestion] = numAnswer;
+        aSelectedAns[numQuestion] = numAnswer;
     }
 }

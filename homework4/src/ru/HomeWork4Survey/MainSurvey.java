@@ -3,40 +3,42 @@ package ru.HomeWork4Survey;
 public class MainSurvey {
 
     public static void main(String[] args) {
-        SurveyLibrary srv = new SurveyLibrary("First Survey");
-        CheckSurvey  checkSrv = new CheckSurvey(srv);
-        System.out.println(srv.nameOfThisSurvey);
-        InputOutputSurvey.printSurvey(srv.arrayQuestionsOfThisSurvey);
-        InputOutputSurvey.printStreamOutput("Начинаем опрос "+srv.nameOfThisSurvey);
-        runningSurvey(srv,checkSrv);
+        SurveyLib survey = new SurveyLib("First Survey");
+        CheckSurvey  checkSurvey = new CheckSurvey(survey);
+        System.out.println(survey.getNameSurvey());
+        IOSurvey.printSurvey(survey.getSurveyQuestions());
+        IOSurvey.printStr("Начинаем опрос "+survey.getNameSurvey());
+        runningSurvey(survey,checkSurvey);
     }
 
-    private static void runningSurvey (SurveyLibrary survey,CheckSurvey checkSrv)
+    private static void runningSurvey (SurveyLib survey, CheckSurvey checkSurvey)
     {
-        getAnswerQuestions(survey,checkSrv);
-        getCheckingSurvey(checkSrv);
-        outputResultSurvey(survey,checkSrv);
+        getAnswerQuestions(survey,checkSurvey);
+        getCheckingSurvey(checkSurvey);
+        outputResultSurvey(survey);
     }
 
-    private static void outputResultSurvey(SurveyLibrary survey,CheckSurvey checkSrv) {
-        String strHeader = "Спасибо Вы прошли опрос:'"+survey.getNameSurvey()+"' Всего вопросов: "+ survey.arrayQuestionsOfThisSurvey.length+" Правильных ответов: "+checkSrv.sumRightAnswer;
-        InputOutputSurvey.printResultSurvey(strHeader, checkSrv.arrayResultOfThisSurvey);
+    private static void outputResultSurvey(SurveyLib survey) {
+        String textNameSurvey          = " Спасибо Вы прошли опрос:'"+ survey.getNameSurvey()+"'";
+        String textCountQuestionSurvey = " Всего вопросов: "        + survey.getCountQuestionsSurvey();
+        String textSumTrueChoice       = " Правильных ответов: "    + survey.getSumTrueChoice();
+        String strHeader               = textNameSurvey + textCountQuestionSurvey + textSumTrueChoice;
+        IOSurvey.printResultSurvey(strHeader, survey.getSurveyResultQuestions());
     }
-    private static void getAnswerQuestions (SurveyLibrary survey,CheckSurvey checkSrv)
+    private static void getAnswerQuestions (SurveyLib survey, CheckSurvey checkSurvey)
     {
-        for (int numQuestion = 0; numQuestion < survey.arrayQuestionsOfThisSurvey.length ; numQuestion++) {
-            InputOutputSurvey.printStreamOutput("Вопрос :" + (numQuestion + 1) + " " + survey.getQuestion(numQuestion));
-            for (int i = 0; i < survey.arrayQuestionsOfThisSurvey[numQuestion][SurveyLibrary.constAnswersPosition].length; i++) {
-                InputOutputSurvey.printStreamOutput((i + 1) + "-" + SurveyLibrary.getAnswerOptions(survey.arrayQuestionsOfThisSurvey, numQuestion, i));
+        for (int qst = 0; qst < survey.getSurveyQuestions().length ; qst++) {
+            IOSurvey.printStr("Вопрос :" + (qst + 1) + " " + survey.getSurveyQuestion(qst));
+            for (int i = 0; i < survey.getSurveyQuestions()[qst].getAnswers().size(); i++) {
+                IOSurvey.printStr((i + 1) + "-" + survey.getAnswerChoice(qst, i));
             }
-            InputOutputSurvey.printStreamOutput("Ваш вариант ответа:");
-            checkSrv.setArraySelectedAnswer(numQuestion, InputOutputSurvey.inputStream());
+            IOSurvey.printStr("Ваш вариант ответа:");
+            checkSurvey.setSelectedAns(qst, IOSurvey.inputStream());
         }
     }
 
-    private static void getCheckingSurvey (CheckSurvey checkSrv)
-    {
-        checkSrv.checkingTheAnswer();
+    private static void getCheckingSurvey (CheckSurvey checkSrv)   {
+        checkSrv.checkAnswer();
     }
 
 }
