@@ -9,9 +9,9 @@ public class SortingHomeWork5 {
     private static final String[] METHOD_SORTING_ARRAYS_LIST ={"BubbleSorting","SelectionSort","FastSort     "};
     private static long[][] resSortedArrays = new long[3][5];
 
-    private static final int COUNT_ITERATION = 1; // Сколько раз прогонять сортировку над одним и тем же исходным массивом
+    private static final int COUNT_ITERATION = 3; // Сколько раз прогонять сортировку над одним и тем же исходным массивом
 
-    private static final int MAX_COUNT_ELEMENTS = 25;  // Сколько элементов в массиве.
+    private static final int MAX_COUNT_ELEMENTS = 30000;  // Сколько элементов в массиве.
 
     public static void main(String[] args)
     {
